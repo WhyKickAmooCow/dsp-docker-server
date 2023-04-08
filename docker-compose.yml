@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  dsp-server:
+    image: ghcr.io/whykickamoocow/dsp-docker-server:master
+    ports:
+      - 8469:8469
+    volumes:
+      - ./game:/game
+      - ./save:/save

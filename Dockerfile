@@ -27,7 +27,8 @@ RUN apt install -y --no-install-recommends \
     winbind \
     xvfb \
     xauth \
-    zenity
+    zenity \
+    jq
 
 ARG WINE_BRANCH="stable"
 RUN curl https://dl.winehq.org/wine-builds/winehq.key | apt-key add - \
