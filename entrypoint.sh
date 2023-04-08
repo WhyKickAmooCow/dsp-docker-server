@@ -7,4 +7,4 @@ then
     install-dsp
 fi
 
-xvfb-run wine "$DSP_INSTALL_PATH/DSPGAME.exe" $LAUNCH_ARGS -load $SAVE
+xvfb-run wine "$DSP_INSTALL_PATH/DSPGAME.exe" $LAUNCH_ARGS -load-latest

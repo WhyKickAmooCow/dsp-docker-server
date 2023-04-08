@@ -13,7 +13,7 @@ docker run --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username
 To install the DSP Server to the ./game directory. Then you can run:
 
 ```
-docker run --rm -v $(pwd)/game:/game -v $(pwd)/save:/save ghcr.io/whykickamoocow/dsp-docker-server:master
+docker run --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master
 ```
 
-In order to run the server/
+In order to run the server.

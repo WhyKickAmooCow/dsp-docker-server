@@ -109,7 +109,7 @@ curl -L "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/2987292049/arti
 echo "##  -> Applying Settings"
 mkdir -p $DSP_INSTALL_PATH/DSPGAME_Data/Plugins/steam_settings
 touch $DSP_INSTALL_PATH/DSPGAME_Data/Plugins/steam_settings/disable_networking.txt
-echo "1366540" > $DSP_INSTALL_PATH/DSPGAME_Data/Plugins/steam_appid.txt
+echo "1366540" > $DSP_INSTALL_PATH/steam_appid.txt
 echo "##  -> Done"
 
 ## Install BepInEx from GitHub
@@ -162,10 +162,6 @@ for i in ${!BEPINEX_PLUGINS[@]}; do
     
     echo "##  -> Done"
 done
-
-mkdir -p $HOME/Dyson\ Sphere\ Program/Achievement
-mkdir -p $HOME/Dyson\ Sphere\ Program/Blueprint
-mkdir -p $HOME/Dyson\ Sphere\ Program/Save
 
 rm -rf $HOME/temp
 

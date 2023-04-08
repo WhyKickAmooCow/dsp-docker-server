@@ -57,7 +57,6 @@ WORKDIR $HOME
 ENV WINEPREFIX=$HOME/.wine
 ENV WINEDLLOVERRIDES="mscoree=n,b;mshtml=n,b;winhttp=n,b"
 
-RUN winetricks --self-update
 RUN winetricks -q dotnet48
 
 RUN mkdir -p $HOME/Dyson\ Sphere\ Program
@@ -66,7 +65,7 @@ RUN ln -s /save $HOME/Dyson\ Sphere\ Program/Save
 ENV LAUNCH_ARGS="-batchmode -nographics -server"
 
 ENV DSP_INSTALL_PATH=/game
-ENV SAVE=save1
 
+COPY ["appdata/", "$HOME/Dyson Sphere Program/"]
 
 ENTRYPOINT [ "/usr/bin/entrypoint" ]
