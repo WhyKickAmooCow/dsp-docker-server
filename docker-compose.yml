@@ -6,5 +6,5 @@ services:
     ports:
       - 8469:8469
     volumes:
-      - ./game:/game
-      - ./save:/save
+      - ./game:/game:z
+      - ./save:/save:z
