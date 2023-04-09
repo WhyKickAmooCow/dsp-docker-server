@@ -11,19 +11,19 @@ To install the DSP Server to the ./game directory run:
 mkdir ./game
 mkdir ./save
 
-docker run --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username -e STEAM_PASS=password -e STEAM_AUTH=2FA-token -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master
+docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username -e STEAM_PASS=password -e STEAM_AUTH=2FA-token -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master
 ```
 
 Then in order to run the server normally you can run:
 
 ```
-docker run --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master
+docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master
 ```
 
 To update the server run:
 
 ```
-docker run --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username -e STEAM_PASS=password -e STEAM_AUTH=2FA-token -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master update
+docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username -e STEAM_PASS=password -e STEAM_AUTH=2FA-token -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master update
 ```
 
 # Environment Variables
