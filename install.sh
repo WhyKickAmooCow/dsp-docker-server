@@ -112,6 +112,12 @@ touch $DSP_INSTALL_PATH/DSPGAME_Data/Plugins/steam_settings/disable_networking.t
 echo "1366540" > $DSP_INSTALL_PATH/steam_appid.txt
 echo "##  -> Done"
 
+
+if [ "$1" = "update" ]
+then
+    rm -rf $DSP_INSTALL_PATH/BepInEx
+fi
+
 ## Install BepInEx from GitHub
 LATEST_JSON=$(curl --silent "https://api.github.com/repos/BepInEx/BepInEx/releases/latest")
 DOWNLOAD_LINK=$(echo ${LATEST_JSON} | jq .assets | jq -r .[].browser_download_url | grep -i x64)
