@@ -119,6 +119,8 @@ then
 fi
 
 ## Install BepInEx from GitHub
+cd $DSP_INSTALL_PATH
+
 LATEST_JSON=$(curl --silent "https://api.github.com/repos/BepInEx/BepInEx/releases/latest")
 DOWNLOAD_LINK=$(echo ${LATEST_JSON} | jq .assets | jq -r .[].browser_download_url | grep -i x64)
 FILE_NAME=$(echo "${DOWNLOAD_LINK##*/}")
@@ -133,8 +135,8 @@ mkdir -p $DSP_INSTALL_PATH/BepInEx/patchers
 
 #Download Required Mods
 echo "## Downloading BepInEx Plugins..."
-mkdir -p $DSP_INSTALL_PATH/temp
-cd $DSP_INSTALL_PATH/temp
+mkdir -p $HOME/temp
+cd $HOME/temp
 for i in ${!BEPINEX_PLUGINS[@]}; do
     TS_ASSET=$(curl --silent "https://dsp.thunderstore.io/api/experimental/package/${BEPINEX_PLUGINS[$i]}/")
     TS_ASSET_VERSION=$(echo $TS_ASSET | jq .latest.version_number | sed 's/"//g')
