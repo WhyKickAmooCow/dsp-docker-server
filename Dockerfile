@@ -28,7 +28,8 @@ RUN apt install -y --no-install-recommends \
         xvfb \
         xauth \
         zenity \
-        jq
+        jq \
+        gettext
 
 ARG WINE_BRANCH="stable"
 RUN curl https://dl.winehq.org/wine-builds/winehq.key | apt-key add - \
@@ -66,6 +67,26 @@ ENV LAUNCH_ARGS="-batchmode -nographics -server"
 
 ENV DSP_INSTALL_PATH=/game
 
+### Server config env vars
+
+## BulletTime
+# Minimum UPS in client of multiplayer game
+ENV MIN_UPS=50
+
+## Nebula Multiplayer
+# ENV SERVER_NAME
+# ENV SERVER_PASSWORD
+ENV PORT=8469
+ENV ENABLE_NGROK=false
+# ENV NGROK_TOKEN
+#ENV NGROK_REGION
+ENV SYNC_UPS=true
+ENV SYNC_SOIL=false
+ENV REMOTE_ACCESS=false
+# ENV REMOTE_ACCESS_PASSWORD
+ENV AUTO_PAUSE=true
+
+COPY config/ $HOME/config/
 COPY ["appdata/", "$HOME/Dyson Sphere Program/"]
 
 ENTRYPOINT [ "/usr/bin/entrypoint" ]

@@ -12,4 +12,9 @@ then
     install-dsp update
 fi
 
+for f in $HOME/config/*
+do
+    cat $f | envsubst > $DSP_INSTALL_PATH/BepInEx/config/${f##*/}
+done
+
 xvfb-run wine "$DSP_INSTALL_PATH/DSPGAME.exe" $LAUNCH_ARGS -load-latest

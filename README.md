@@ -28,12 +28,24 @@ docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=user
 
 # Environment Variables
 
-| Name               | Default                            | Description                                                                               |
-| ------------------ | ---------------------------------- | ----------------------------------------------------------------------------------------- |
-| WINEDLLOVERRIDES   | mscoree=n,b;mshtml=n,b;winhttp=n,b | WINEDLLOVERRIDES as in WINE                                                               |
-| DSP_INSTALL_PATH   | /game                              | Where in the container DSP should be installed to                                         |
-| LAUNCH_ARGS        | -batchmode -nographics -server     | Arguments to pass to DSP when launching the game                                          |
-| ADDITIONAL_PLUGINS |                                    | Plugins additional to Nebula Multiplayer (and its dependencies) to install to the server. |
+| Name                   | Default                            | Description                                                                                     |
+| ---------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------- |
+| WINEDLLOVERRIDES       | mscoree=n,b;mshtml=n,b;winhttp=n,b | WINEDLLOVERRIDES as in WINE                                                                     |
+| DSP_INSTALL_PATH       | /game                              | Where in the container DSP should be installed to                                               |
+| LAUNCH_ARGS            | -batchmode -nographics -server     | Arguments to pass to DSP when launching the game                                                |
+| ADDITIONAL_PLUGINS     |                                    | Plugins additional to Nebula Multiplayer (and its dependencies) to install to the server.       |
+| MIN_UPS                | 50                                 | Minimum UPS of client of multiplayer game (BulletTime)                                          |
+| SERVER_NAME            |                                    |                                                                                                 |
+| SERVER_PASSWORD        |                                    | [Nebula Docs](https://github.com/hubastard/nebula/wiki/Setup-Headless-Server#config-options)    |
+| PORT                   | 8469                               | The port for the server to listen on                                                            |
+| ENABLE_NGROK           | false                              | [Nebula Ngrok Docs](https://github.com/hubastard/nebula/wiki/Hosting-and-Joining#ngrok-support) |
+| NGROK_TOKEN            |                                    | [Nebula Ngrok Docs](https://github.com/hubastard/nebula/wiki/Hosting-and-Joining#ngrok-support) |
+| NGROK_REGION           |                                    | [Nebula Ngrok Docs](https://github.com/hubastard/nebula/wiki/Hosting-and-Joining#ngrok-support) |
+| SYNC_UPS               | true                               | [Nebula Docs](https://github.com/hubastard/nebula/wiki/About-Nebula#shared-resources)           |
+| SYNC_SOIL              | false                              | [Nebula Docs](https://github.com/hubastard/nebula/wiki/About-Nebula#shared-resources)           |
+| REMOTE_ACCESS          | false                              | [Nebula Docs](https://github.com/hubastard/nebula/wiki/Setup-Headless-Server#config-options)    |
+| REMOTE_ACCESS_PASSWORD |                                    | [Nebula Docs](https://github.com/hubastard/nebula/wiki/Setup-Headless-Server#config-options)    |
+| AUTO_PAUSE             | true                               | [Nebula Docs](https://github.com/hubastard/nebula/wiki/Setup-Headless-Server#config-options)    |
 
 # Credits
 
