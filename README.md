@@ -54,6 +54,7 @@ docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -p 8469:8469 ghcr.
 | AUTO_PAUSE             | true                               | [Nebula Docs](https://github.com/hubastard/nebula/wiki/Setup-Headless-Server#config-options)    |
 | STAR_COUNT             | 64                                 | When creating a new save, how large the cluster should be.                                      |
 | RESOURCE_MUTLIPLIER    | 1.0                                | What the resource multiplier should be when creating a new save.                                |
+| SEED                   |                                    | If left blank, randomly generated. An integer seed for when creating a new save.                |
 
 # Credits
 
