@@ -11,7 +11,10 @@ To install the DSP Server to the ./game directory run:
 mkdir ./game
 mkdir ./save
 
+# Not requiring running interactively
 docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username -e STEAM_PASS=password -e STEAM_AUTH=2FA-token -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master
+# Or if you can run it interactively, steamcmd will ask for your 2FA Code
+docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username -e STEAM_PASS=password -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master
 ```
 
 Then in order to run the server normally you can run:
@@ -23,18 +26,21 @@ docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -p 8469:8469 ghcr.
 To update the server run:
 
 ```
+# To Update the game.
 docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username -e STEAM_PASS=password -e STEAM_AUTH=2FA-token -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master update
+# To only update the mods.
+docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master update_mods
 ```
 
 # Environment Variables
 
 | Name                   | Default                            | Description                                                                                     |
 | ---------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------- |
-| WINEDLLOVERRIDES       | mscoree=n,b;mshtml=n,b;winhttp=n,b | WINEDLLOVERRIDES as in WINE                                                                     |
-| DSP_INSTALL_PATH       | /game                              | Where in the container DSP should be installed to                                               |
-| LAUNCH_ARGS            | -batchmode -nographics -server     | Arguments to pass to DSP when launching the game                                                |
+| WINEDLLOVERRIDES       | mscoree=n,b;mshtml=n,b;winhttp=n,b | WINEDLLOVERRIDES as in WINE.                                                                    |
+| DSP_INSTALL_PATH       | /game                              | Where in the container DSP should be installed to.                                              |
+| LAUNCH_ARGS            | -batchmode -nographics -server     | Arguments to pass to DSP when launching the game.                                               |
 | ADDITIONAL_PLUGINS     |                                    | Plugins additional to Nebula Multiplayer (and its dependencies) to install to the server.       |
-| MIN_UPS                | 50                                 | Minimum UPS of client of multiplayer game (BulletTime)                                          |
+| MIN_UPS                | 50                                 | Minimum UPS of client of multiplayer game (BulletTime).                                         |
 | SERVER_NAME            |                                    |                                                                                                 |
 | SERVER_PASSWORD        |                                    | [Nebula Docs](https://github.com/hubastard/nebula/wiki/Setup-Headless-Server#config-options)    |
 | PORT                   | 8469                               | The port for the server to listen on                                                            |
@@ -46,6 +52,8 @@ docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=user
 | REMOTE_ACCESS          | false                              | [Nebula Docs](https://github.com/hubastard/nebula/wiki/Setup-Headless-Server#config-options)    |
 | REMOTE_ACCESS_PASSWORD |                                    | [Nebula Docs](https://github.com/hubastard/nebula/wiki/Setup-Headless-Server#config-options)    |
 | AUTO_PAUSE             | true                               | [Nebula Docs](https://github.com/hubastard/nebula/wiki/Setup-Headless-Server#config-options)    |
+| STAR_COUNT             | 64                                 | When creating a new save, how large the cluster should be.                                      |
+| RESOURCE_MUTLIPLIER    | 1.0                                | What the resource multiplier should be when creating a new save.                                |
 
 # Credits
 

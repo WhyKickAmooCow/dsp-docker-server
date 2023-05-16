@@ -8,47 +8,43 @@ RUN dpkg --add-architecture i386
 
 RUN apt update
 RUN apt install -y --no-install-recommends \
-        apt-transport-https \
-        ca-certificates \
-        cabextract \
-        git \
-        gnupg \
-        gosu \
-        gpg-agent \
-        locales \
-        p7zip \
-        pulseaudio \
-        pulseaudio-utils \
-        sudo \
-        tzdata \
-        unzip \
-        wget \
-        curl \
-        winbind \
-        xvfb \
-        xauth \
-        zenity \
-        jq \
-        gettext
+    apt-transport-https \
+    ca-certificates \
+    cabextract \
+    git \
+    gnupg \
+    gosu \
+    gpg-agent \
+    locales \
+    p7zip \
+    pulseaudio \
+    pulseaudio-utils \
+    sudo \
+    tzdata \
+    unzip \
+    wget \
+    curl \
+    winbind \
+    xvfb \
+    xauth \
+    zenity \
+    jq \
+    gettext
 
 ARG WINE_BRANCH="stable"
 RUN curl https://dl.winehq.org/wine-builds/winehq.key | apt-key add - \
-        && echo "deb https://dl.winehq.org/wine-builds/ubuntu/ $(grep VERSION_CODENAME= /etc/os-release | cut -d= -f2) main" >> /etc/apt/sources.list \
-        && apt-get update \
-        && apt-get install -y --install-recommends winehq-${WINE_BRANCH}
+    && echo "deb https://dl.winehq.org/wine-builds/ubuntu/ $(grep VERSION_CODENAME= /etc/os-release | cut -d= -f2) main" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y --install-recommends winehq-${WINE_BRANCH}
 
 RUN rm -rf /var/lib/apt/lists/*
 
 ADD --chmod=777 https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks /usr/bin/winetricks
 
-COPY --chmod=777 install.sh /usr/bin/install-dsp
-COPY --chmod=777 entrypoint.sh /usr/bin/entrypoint
-
-RUN mkdir /game
-RUN chown -R dsp:dsp /game
-
-RUN mkdir /save
-RUN chown -R dsp:dsp /save
+RUN mkdir /game \
+    && mkdir /save \
+    && mkdir /config \
+    && chown -R dsp:dsp /game /save /config
 
 USER dsp
 ENV USER dsp
@@ -86,7 +82,17 @@ ENV REMOTE_ACCESS=false
 # ENV REMOTE_ACCESS_PASSWORD
 ENV AUTO_PAUSE=true
 
-COPY config/ $HOME/config/
+ENV STAR_COUNT=64
+ENV RESOURCE_MUTLIPLIER=1.0
+
+COPY config/ /config/
 COPY ["appdata/", "$HOME/Dyson Sphere Program/"]
+
+# Looks weird, but means that it can cache installing dotnet rather then needing to reinstall it every damn time I change the entrypoint or install scripts.
+USER root
+COPY --chmod=777 install.sh /usr/bin/install-dsp
+COPY --chmod=777 install-mods.sh /usr/bin/install-mods
+COPY --chmod=777 entrypoint.sh /usr/bin/entrypoint
+USER dsp
 
 ENTRYPOINT [ "/usr/bin/entrypoint" ]
