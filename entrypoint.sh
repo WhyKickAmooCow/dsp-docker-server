@@ -27,7 +27,7 @@ do
     cat $f | envsubst > $DSP_INSTALL_PATH/BepInEx/config/${f##*/}
 done
 
-if [ ! -f "/save/_lastexit_.dsv" ]
+if [ ! -n "$(ls -A /save 2>/dev/null)" ]
 then
     if [ -z ${SEED} ]
     then
