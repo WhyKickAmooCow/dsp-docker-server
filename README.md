@@ -11,10 +11,8 @@ To install the DSP Server to the ./game directory run:
 mkdir ./game
 mkdir ./save
 
-# Not requiring running interactively
-docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username -e STEAM_PASS=password -e STEAM_AUTH=2FA-token -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master
-# Or if you can run it interactively, steamcmd will ask for your 2FA Code
-docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username -e STEAM_PASS=password -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master
+# Only requires username, then it will ask for password and token while running. If you want to run it without interactivity then give it the password and 2FA token.
+docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master username [password] [2FA-token]
 ```
 
 Then in order to run the server normally you can run:
@@ -27,7 +25,7 @@ To update the server run:
 
 ```
 # To Update the game.
-docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -e STEAM_USER=username -e STEAM_PASS=password -e STEAM_AUTH=2FA-token -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master update
+docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master update username [password] [2FA-token]
 # To only update the mods.
 docker run -it --rm -v $(pwd)/game:/game -v $(pwd)/save:/save -p 8469:8469 ghcr.io/whykickamoocow/dsp-docker-server:master update_mods
 ```

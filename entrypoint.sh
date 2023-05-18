@@ -4,12 +4,12 @@ set -e
 
 if [ ! -f "$DSP_INSTALL_PATH/DSPGAME.exe" ]
 then
-    install-dsp
+    install-dsp $1 $2 $3
 elif [ "$1" != "" ]
 then
     case "$1" in
         update)
-            install-dsp update
+            install-dsp $2 $3 $4
             ;;
         update_mods)
             install-mods

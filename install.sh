@@ -19,15 +19,15 @@ Purple='\033[0;35m'       # Purple
 Cyan='\033[0;36m'         # Cyan
 White='\033[0;37m'        # White
 
-## Check if SteamGuard is enabled
-if [ -z ${STEAM_PASS} ]
+# Check if SteamGuard is enabled
+if [ -z "$1" ]
 then
     echo -e "[${Red}ERROR${Color_Off}] You are required to provide a steam login that owns Dyson Sphere Program."
     exit 1
 fi
 
 ## install game using steamcmd
-steamcmd +force_install_dir $DSP_INSTALL_PATH +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} +@sSteamCmdForcePlatformType windows +app_update 1366540 validate +quit
+steamcmd +force_install_dir $DSP_INSTALL_PATH +login $1 $2 $3 +@sSteamCmdForcePlatformType windows +app_update 1366540 validate +quit
 
 ## Install Goldberg Steam Emu
 echo "## Installing Goldberg Steam Emu"
