@@ -9,7 +9,7 @@ BEPINEX_PLUGINS=("nebula/NebulaMultiplayerMod" "nebula/NebulaMultiplayerModApi" 
 
 if [[ ! -z "$ADDITIONAL_PLUGINS" ]]
 then
-    read -a tmpArray <<< $ADDITIONAL_PLUGINS
+    readarray -t -d "," tmpArray <<< $ADDITIONAL_PLUGINS
     BEPINEX_PLUGINS=("${BEPINEX_PLUGINS[@]}" "${tmpArray[@]}")
 fi
 
