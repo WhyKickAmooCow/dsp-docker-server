@@ -9,13 +9,13 @@ BEPINEX_PLUGINS=("nebula/NebulaMultiplayerMod" "nebula/NebulaMultiplayerModApi" 
 
 if [[ ! -z "$ADDITIONAL_PLUGINS" ]]
 then
-    readarray -t -d "," tmpArray <<< $ADDITIONAL_PLUGINS
-    BEPINEX_PLUGINS=("${BEPINEX_PLUGINS[@]}" "${tmpArray[@]}")
+    readarray -t -d ";" tmpArray < <(printf $ADDITIONAL_PLUGINS)
+    BEPINEX_PLUGINS+=( "${tmpArray[@]}" )
 fi
 
 tmpMsg=""
-for i in ${!BEPINEX_PLUGINS[@]}; do
-    tmpMsg+="${BEPINEX_PLUGINS[$i]},"
+for i in ${BEPINEX_PLUGINS[@]}; do
+    tmpMsg+="$i,"
 done
 
 echo "Will download the following plugins: $tmpMsg"
@@ -41,8 +41,9 @@ mkdir -p $DSP_INSTALL_PATH/BepInEx/patchers
 echo "## Downloading BepInEx Plugins..."
 mkdir -p $HOME/temp
 cd $HOME/temp
-for i in ${!BEPINEX_PLUGINS[@]}; do
-    TS_ASSET=$(curl --silent "https://dsp.thunderstore.io/api/experimental/package/${BEPINEX_PLUGINS[$i]}/")
+
+for i in ${BEPINEX_PLUGINS[@]}; do
+    TS_ASSET=$(curl --silent "https://dsp.thunderstore.io/api/experimental/package/$i/")
     TS_ASSET_VERSION=$(echo $TS_ASSET | jq .latest.version_number | sed 's/"//g')
     TS_ASSET_NAME=$(echo $TS_ASSET | jq .name | sed 's/"//g')
     TS_DL_URL=$(echo $TS_ASSET | jq .latest.download_url | sed 's/"//g')
