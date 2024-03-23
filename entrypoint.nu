@@ -27,16 +27,14 @@ def main [...args] {
         "update_mods" => {
             install_mods $bepinex_plugins
         },
-        _ => {
-            if ($args | length) > 0  {
-                if (($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists)) {
-                    error make {msg: $"Unknown argument ($args.0)"}
-                } else {
-                    install_game (safe_get $args 0 "") (safe_get $args 1 "") (safe_get $args 2 "")
-                    install_mods $bepinex_plugins
-                }
+        _ if ($args | length) > 0 => {
+            if (($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists)) {
+                error make {msg: $"Unknown argument ($args.0)"}
+            } else {
+                install_game (safe_get $args 0 "") (safe_get $args 1 "") (safe_get $args 2 "")
+                install_mods $bepinex_plugins
             }
-        } 
+        }
     }
 
     run_game
