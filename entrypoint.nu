@@ -21,19 +21,21 @@ def safe_get [list, index: int, default: any = null] {
 def main [...args] {
     match (safe_get $args 0) {
         "update" => {
-            install_game (safe_get $args 1) (safe_get $args 2) (safe_get $args 3)
+            install_game (safe_get $args 1 "") (safe_get $args 2 "") (safe_get $args 3 "")
             install_mods $bepinex_plugins
         },
         "update_mods" => {
             install_mods $bepinex_plugins
         },
         _ => {
-            # if (($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists) and ($args | length) > 0) {
-            #     error make {msg: $"Unknown argument ($args.0)"}
-            # } else {
-            install_game (safe_get $args 0 "") (safe_get $args 1 "") (safe_get $args 2 "")
-            install_mods $bepinex_plugins
-            # }
+            if ($args | length) > 0  {
+                if (($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists)) {
+                    error make {msg: $"Unknown argument ($args.0)"}
+                } else {
+                    install_game (safe_get $args 0 "") (safe_get $args 1 "") (safe_get $args 2 "")
+                    install_mods $bepinex_plugins
+                }
+            }
         } 
     }
 
@@ -56,20 +58,20 @@ def install_game [username: string, password: string, code: string] {
     "1366540" | save -f $"($env.DSP_INSTALL_PATH)/steam_appid.txt"
 }
 
-def install_bepinex [] {
-    rm -rf $"($env.DSP_INSTALL_PATH)/BepInEx"
-    cd $env.DSP_INSTALL_PATH
+def install_mods [mods: list<string>] {
+    echo "Installing BepInEx"
 
-    let latest_json = (http get https://api.github.com/repos/BepInEx/BepInEx/releases/latest).content | from json
-    let asset = $latest_json.assets | where name =~ ^BepInEx_x86
+    rm -rf $"($env.DSP_INSTALL_PATH)/BepInEx"
+
+    cd $env.DSP_INSTALL_PATH
+    let latest_json = (http get https://api.github.com/repos/BepInEx/BepInEx/releases/latest)
+    let asset = $latest_json.assets | where name =~ ^BepInEx_x86 | first
 
     curl -s -OL $asset.browser_download_url
     unzip -qq -o $asset.name
-}
+    rm $asset.name
 
-def install_mods [mods: list<string>] {
-    "Installing Mods:"
-
+    echo "Installing Mods:"
     for mod in $mods {
         echo $"- ($mod)"
     }
@@ -110,7 +112,7 @@ def run_game [] {
     mkdir $"($env.DSP_INSTALL_PATH)/BepInEx/config"
 
     for file in (ls /config/) {
-        open --raw $file.name | envsubst | save $"($env.DSP_INSTALL_PATH)/BepInEx/config/($file.name | path basename)"
+        open --raw $file.name | envsubst | save -f $"($env.DSP_INSTALL_PATH)/BepInEx/config/($file.name | path basename)"
     }
 
     mut save = -load-latest
