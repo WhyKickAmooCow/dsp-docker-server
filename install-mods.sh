@@ -26,14 +26,15 @@ rm -rf $DSP_INSTALL_PATH/BepInEx
 cd $DSP_INSTALL_PATH
 
 LATEST_JSON=$(curl --silent "https://api.github.com/repos/BepInEx/BepInEx/releases/latest")
-DOWNLOAD_LINK=$(echo ${LATEST_JSON} | jq .assets | jq -r .[].browser_download_url | grep -i x64)
-FILE_NAME=$(echo "${DOWNLOAD_LINK##*/}")
+ASSET=$(echo ${LATEST_JSON} | jq '.assets[] | select(.name | test("^BepInEx_x86"))')
+DOWNLOAD_LINK=$(echo ${ASSET} | jq '.browser_download_url')
+FILE_NAME=$(echo "${ASSET}" | jq '.name')
 echo "## Attempting to download BepInEx from $DOWNLOAD_LINK"
-curl -OL $DOWNLOAD_LINK > /dev/null
+curl -s -OL $DOWNLOAD_LINK
 echo "## Installing BepInEx"
-unzip -o "./$FILE_NAME" > /dev/null
+unzip -qq -o "./$FILE_NAME"
 echo "##   -> Done"
-rm -fR $FILE_NAME
+rm -rf $FILE_NAME
 mkdir -p $DSP_INSTALL_PATH/BepInEx/plugins
 mkdir -p $DSP_INSTALL_PATH/BepInEx/patchers
 
@@ -43,17 +44,17 @@ mkdir -p $HOME/temp
 cd $HOME/temp
 
 for i in ${BEPINEX_PLUGINS[@]}; do
-    TS_ASSET=$(curl --silent "https://dsp.thunderstore.io/api/experimental/package/$i/")
-    TS_ASSET_VERSION=$(echo $TS_ASSET | jq .latest.version_number | sed 's/"//g')
-    TS_ASSET_NAME=$(echo $TS_ASSET | jq .name | sed 's/"//g')
-    TS_DL_URL=$(echo $TS_ASSET | jq .latest.download_url | sed 's/"//g')
+    TS_ASSET=$(curl --silent "https://thunderstore.io/api/experimental/package/$i/")
+    TS_ASSET_VERSION=$(echo $TS_ASSET | jq -r .latest.version_number)
+    TS_ASSET_NAME=$(echo $TS_ASSET | jq -r .name)
+    TS_DL_URL=$(echo $TS_ASSET | jq -r .latest.download_url)
     echo "## Attempting to download $TS_ASSET_NAME v$TS_ASSET_VERSION from Thunderstore.io"
-    curl -L $TS_DL_URL --output "$TS_ASSET_NAME.zip" 2> /dev/null
+    curl -s -L $TS_DL_URL -o "$TS_ASSET_NAME.zip"
     
     echo "## Extracting $TS_ASSET_NAME.zip"
     mkdir -p "$HOME/temp/$TS_ASSET_NAME"
-    unzip -o "./$TS_ASSET_NAME.zip" -d "$HOME/temp/$TS_ASSET_NAME" > /dev/null
-    rm -fR "./$TS_ASSET_NAME.zip"
+    unzip -qq -o "./$TS_ASSET_NAME.zip" -d "$HOME/temp/$TS_ASSET_NAME"
+    rm -rf "./$TS_ASSET_NAME.zip"
     
     # Check for a "plugins" or "patchers" sub directory.
     CWD="$HOME/temp/$TS_ASSET_NAME"
@@ -61,16 +62,16 @@ for i in ${BEPINEX_PLUGINS[@]}; do
     if [ -d "$CWD/plugins" ]
     then
         mkdir -p "$DSP_INSTALL_PATH/BepInEx/plugins/$TS_ASSET_NAME"
-        cp -fr $CWD/plugins/* "$DSP_INSTALL_PATH/BepInEx/plugins/$TS_ASSET_NAME/"
+        cp -rf $CWD/plugins/* "$DSP_INSTALL_PATH/BepInEx/plugins/$TS_ASSET_NAME/"
     else
-        cp -fr $CWD $DSP_INSTALL_PATH/BepInEx/plugins
+        cp -rf $CWD $DSP_INSTALL_PATH/BepInEx/plugins
     fi
     
     if [ -d "$CWD/patchers" ]
     then
         echo "##  -> Installing Patcher"
         mkdir -p "$DSP_INSTALL_PATH/BepInEx/patchers/$TS_ASSET_NAME"
-        cp -fr $CWD/patchers/* "$DSP_INSTALL_PATH/BepInEx/patchers/$TS_ASSET_NAME/"
+        cp -rf $CWD/patchers/* "$DSP_INSTALL_PATH/BepInEx/patchers/$TS_ASSET_NAME/"
     fi
     
     echo "##  -> Done"

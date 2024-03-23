@@ -1,45 +1,6 @@
-FROM steamcmd/steamcmd:latest
+FROM ghcr.io/whykickamoocow/steamcmd-wine:main
 
 RUN useradd -m -d /home/dsp -s /bin/bash dsp
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN dpkg --add-architecture i386
-
-RUN apt update
-RUN apt install -y --no-install-recommends \
-    apt-transport-https \
-    ca-certificates \
-    cabextract \
-    git \
-    gnupg \
-    gosu \
-    gpg-agent \
-    locales \
-    p7zip \
-    pulseaudio \
-    pulseaudio-utils \
-    sudo \
-    tzdata \
-    unzip \
-    wget \
-    curl \
-    winbind \
-    xvfb \
-    xauth \
-    zenity \
-    jq \
-    gettext
-
-ARG WINE_BRANCH="stable"
-RUN curl https://dl.winehq.org/wine-builds/winehq.key | apt-key add - \
-    && echo "deb https://dl.winehq.org/wine-builds/ubuntu/ $(grep VERSION_CODENAME= /etc/os-release | cut -d= -f2) main" >> /etc/apt/sources.list \
-    && apt-get update \
-    && apt-get install -y --install-recommends winehq-${WINE_BRANCH}
-
-RUN rm -rf /var/lib/apt/lists/*
-
-ADD --chmod=777 https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks /usr/bin/winetricks
 
 RUN mkdir /game \
     && mkdir /save \
@@ -93,6 +54,24 @@ USER root
 COPY --chmod=777 install.sh /usr/bin/install-dsp
 COPY --chmod=777 install-mods.sh /usr/bin/install-mods
 COPY --chmod=777 entrypoint.sh /usr/bin/entrypoint
+
+ARG NUSHELL_VER="0.91.0"
+RUN echo '/usr/bin/nu' >> /etc/shells \
+    && usermod --shell /usr/bin/nu dsp \
+    && mkdir -p /home/dsp/.config/nushell/ \
+    && wget -q https://raw.githubusercontent.com/nushell/nushell/${NUSHELL_VER}/crates/nu-utils/src/sample_config/default_config.nu -O /home/dsp/.config/nushell/config.nu \
+    && wget -q https://raw.githubusercontent.com/nushell/nushell/${NUSHELL_VER}/crates/nu-utils/src/sample_config/default_env.nu -O /home/dsp/.config/nushell/env.nu \
+    && cd /tmp \
+    && wget -q https://github.com/nushell/nushell/releases/download/${NUSHELL_VER}/nu-${NUSHELL_VER}-x86_64-linux-gnu-full.tar.gz \
+    && tar -xzf nu* \
+    && cd nu*-gnu-full \
+    && mv nu* /usr/bin \
+    && chmod +x /usr/bin/nu \
+    && chown -R dsp:dsp /home/dsp/.config/nushell \
+    && ls /usr/bin/nu_plugin* \
+    | xargs -I{} su -c 'register {}' dsp \
+    && rm -rf /tmp/*
+
 USER dsp
 
 ENTRYPOINT [ "/usr/bin/entrypoint" ]

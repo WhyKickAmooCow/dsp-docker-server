@@ -32,7 +32,7 @@ steamcmd +force_install_dir $DSP_INSTALL_PATH +login $1 $2 $3 +@sSteamCmdForcePl
 ## Install Goldberg Steam Emu
 echo "## Installing Goldberg Steam Emu"
 rm -f $DSP_INSTALL_PATH/DSPGAME_Data/Plugins/steam_api64.dll
-curl -L "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/2987292049/artifacts/raw/steam_api64.dll" --output "$DSP_INSTALL_PATH/DSPGAME_Data/Plugins/steam_api64.dll" 2> /dev/null
+curl -s -L "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/2987292049/artifacts/raw/steam_api64.dll" -o "$DSP_INSTALL_PATH/DSPGAME_Data/Plugins/steam_api64.dll"
 echo "##  -> Applying Settings"
 mkdir -p $DSP_INSTALL_PATH/DSPGAME_Data/Plugins/steam_settings
 touch $DSP_INSTALL_PATH/DSPGAME_Data/Plugins/steam_settings/disable_networking.txt
