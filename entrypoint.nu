@@ -1,14 +1,14 @@
 #!/usr/bin/env nu
 
 let bepinex_plugins = [
-                                    "nebula/NebulaMultiplayerMod", 
-                                    "nebula/NebulaMultiplayerModApi",
-                                    "PhantomGamers/IlLine",
-                                    "CommonAPI/CommonAPI",
-                                    "starfi5h/BulletTime",
-                                    "xiaoye97/LDBTool",
-                                    "CommonAPI/DSPModSave"
-                                    ]
+    "nebula/NebulaMultiplayerMod", 
+    "nebula/NebulaMultiplayerModApi",
+    "PhantomGamers/IlLine",
+    "CommonAPI/CommonAPI",
+    "starfi5h/BulletTime",
+    "xiaoye97/LDBTool",
+    "CommonAPI/DSPModSave"
+]
 
 def safe_get [list, index: int, default: any = null] {
     if ($list | length) > $index {
@@ -100,7 +100,7 @@ def install_mods [mods: list<string>] {
             cp -rf ./ $"($env.DSP_INSTALL_PATH)/BepInEx/plugins/"
         }
 
-        if ("patchers" | path exists) {
+        if ("./patchers" | path exists) {
             mkdir $"($env.DSP_INSTALL_PATH)/BepInEx/patchers/($asset.name)"
             cp -rf ./patchers/* $"($env.DSP_INSTALL_PATH)/BepInEx/patchers/($asset.name)/"
         }
