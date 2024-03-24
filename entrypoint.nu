@@ -48,7 +48,7 @@ def install_game [username: string, password: string, code: string] {
     steamcmd +force_install_dir $env.DSP_INSTALL_PATH +login $username $password $code +@sSteamCmdForcePlatformType windows +app_update 1366540 validate +quit
 
     rm -f $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_api64.dll"
-    curl -s -L "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/2987292049/artifacts/raw/steam_api64.dll" -o $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_api64.dll"
+    curl -s -L "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/4247811307/artifacts/raw/release/steam_api64.dll" -o $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_api64.dll"
 
     mkdir $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_settings"
     touch $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_settings/disable_networking.txt"

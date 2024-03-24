@@ -14,6 +14,7 @@ WORKDIR $HOME
 
 ENV WINEPREFIX=$HOME/.wine
 ENV WINEDLLOVERRIDES="mscoree=n,b;mshtml=n,b;winhttp=n,b"
+ENV WINEDEBUG=fixme-all,err-d3d_shader
 
 RUN winetricks -q dotnet48
 
