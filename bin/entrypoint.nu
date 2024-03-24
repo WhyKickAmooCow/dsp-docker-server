@@ -1,6 +1,6 @@
 #!/usr/bin/env nu
 
-let bepinex_plugins = [
+let required_plugins = [
     "nebula/NebulaMultiplayerMod", 
     "nebula/NebulaMultiplayerModApi",
     "PhantomGamers/IlLine",
@@ -9,6 +9,8 @@ let bepinex_plugins = [
     "xiaoye97/LDBTool",
     "CommonAPI/DSPModSave"
 ]
+
+let bepinex_plugins = $required_plugins ++ (echo $env.ADDITIONAL_PLUGINS | split row ',')
 
 def safe_get [list, index: int, default: any = null] {
     if ($list | length) > $index {
@@ -85,6 +87,8 @@ def install_mods [mods: list<string>] {
     for mod in $mods {
         cd /tmp/dsp-mods
 
+        print $"Installing ($mod):"
+        
         let asset = http get $"https://thunderstore.io/api/experimental/package/($mod)/"
         
         print $"Downloading ($asset.name):($asset.latest.version_number) from ($asset.latest.download_url)"
