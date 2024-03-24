@@ -1,3 +1,7 @@
+| :warning: Notice                                                                                                                                                              |
+| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Closing the server doesn't appear to automatically save the game in this container. It should still autosave, but use commands after enabling remote access to save manually. |
+
 # About
 
 This is a Dyson Sphere Program game server running inside a docker container. This is accomplished using WINE and using Goldberg's Steam Emu to allow launching the game straight from the exe without steam installed. This requires you to already own the game in Steam and to provide login details so the game can be downloaded. You can of course set up your DSP game with the mods you want and then patch it with Goldberg's yourself and put it in the ./game folder if you don't trust / dont want to provide login details.
