@@ -3,8 +3,10 @@ version: "3.8"
 services:
   dsp-server:
     image: ghcr.io/whykickamoocow/dsp-docker-server:master
+    # build: ./
     ports:
       - 8469:8469
     volumes:
       - ./game:/game:z
       - ./save:/save:z
+      # - ./bin/entrypoint.nu:/usr/bin/entrypoint.nu

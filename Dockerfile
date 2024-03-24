@@ -18,9 +18,6 @@ ENV WINEDEBUG=fixme-all,err-d3d_shader
 
 RUN winetricks -q dotnet48
 
-RUN mkdir -p $HOME/Dyson\ Sphere\ Program
-RUN ln -s /save $HOME/Dyson\ Sphere\ Program/Save
-
 ENV LAUNCH_ARGS="-batchmode -nographics -server"
 
 ENV DSP_INSTALL_PATH=/game
@@ -48,13 +45,13 @@ ENV STAR_COUNT=64
 ENV RESOURCE_MUTLIPLIER=1.0
 
 COPY config/ /config/
-COPY ["appdata/", "$HOME/Dyson Sphere Program/"]
+RUN mkdir -p "/home/dsp/.wine/drive_c/users/dsp/Documents/Dyson Sphere Program"
+RUN ln -s /save "/home/dsp/.wine/drive_c/users/dsp/Documents/Dyson Sphere Program/Save"
+COPY ["appdata/", "/home/dsp/.wine/drive_c/users/dsp/Documents/Dyson Sphere Program/"]
 
 # Looks weird, but means that it can cache installing dotnet rather then needing to reinstall it every damn time I change the entrypoint or install scripts.
 USER root
-COPY --chmod=777 install.sh /usr/bin/install-dsp
-COPY --chmod=777 install-mods.sh /usr/bin/install-mods
-COPY --chmod=777 entrypoint.sh /usr/bin/entrypoint
+COPY --chmod=777 bin/* /usr/bin/
 
 ARG NUSHELL_VER="0.91.0"
 RUN echo '/usr/bin/nu' >> /etc/shells \
@@ -75,4 +72,5 @@ RUN echo '/usr/bin/nu' >> /etc/shells \
 
 USER dsp
 
-ENTRYPOINT [ "/usr/bin/entrypoint" ]
+
+ENTRYPOINT [ "/usr/bin/entrypoint.nu" ]

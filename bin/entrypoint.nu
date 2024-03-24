@@ -19,23 +19,29 @@ def safe_get [list, index: int, default: any = null] {
 }
 
 def main [...args] {
-    match (safe_get $args 0) {
-        "update" => {
-            install_game (safe_get $args 1 "") (safe_get $args 2 "") (safe_get $args 3 "")
-            install_mods $bepinex_plugins
-        },
-        "update_mods" => {
-            install_mods $bepinex_plugins
-        },
-        _ if ($args | length) > 0 => {
-            if (($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists)) {
-                error make {msg: $"Unknown argument ($args.0)"}
-            } else {
-                install_game (safe_get $args 0 "") (safe_get $args 1 "") (safe_get $args 2 "")
+    try {
+        match (safe_get $args 0) {
+            "update" => {
+                install_game (safe_get $args 1 "") (safe_get $args 2 "") (safe_get $args 3 "")
                 install_mods $bepinex_plugins
+            },
+            "update_mods" => {
+                install_mods $bepinex_plugins
+            },
+            _ if ($args | length) > 0 => {
+                if (($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists)) {
+                    error make {msg: $"Unknown argument ($args.0)"}
+                } else {
+                    install_game (safe_get $args 0 "") (safe_get $args 1 "") (safe_get $args 2 "")
+                    install_mods $bepinex_plugins
+                }
             }
         }
+    } catch { |e|
+        print -e $"Error: ($e.msg)"
+        return
     }
+
 
     run_game
 }
@@ -57,22 +63,19 @@ def install_game [username: string, password: string, code: string] {
 }
 
 def install_mods [mods: list<string>] {
-    echo "Installing BepInEx"
+    print "Installing BepInEx"
 
     rm -rf $"($env.DSP_INSTALL_PATH)/BepInEx"
 
     cd $env.DSP_INSTALL_PATH
     let latest_json = (http get https://api.github.com/repos/BepInEx/BepInEx/releases/latest)
-    let asset = $latest_json.assets | where name =~ ^BepInEx_x86 | first
+    let asset = $latest_json.assets | where name =~ ^BepInEx_x64 | first
 
     curl -s -OL $asset.browser_download_url
     unzip -qq -o $asset.name
     rm $asset.name
 
-    echo "Installing Mods:"
-    for mod in $mods {
-        echo $"- ($mod)"
-    }
+    print $"Installing Mods: ($mods)"
 
     mkdir $"($env.DSP_INSTALL_PATH)/BepInEx/plugins"
     mkdir $"($env.DSP_INSTALL_PATH)/BepInEx/patchers"
@@ -84,6 +87,8 @@ def install_mods [mods: list<string>] {
 
         let asset = http get $"https://thunderstore.io/api/experimental/package/($mod)/"
         
+        print $"Downloading ($asset.name):($asset.latest.version_number) from ($asset.latest.download_url)"
+
         curl -s -L $asset.latest.download_url -o $"($asset.name).zip"
         mkdir $asset.name
         unzip -qq -o $"($asset.name).zip" -d $asset.name
@@ -124,5 +129,5 @@ def run_game [] {
         $save = $"-newgame ($seed | str join) ($env.STAR_COUNT) ($env.RESOURCE_MUTLIPLIER)"
     }
 
-    xvfb-run wine $"($env.DSP_INSTALL_PATH)/DSPGAME.exe" $env.LAUNCH_ARGS $save
+    xvfb-run wine $"($env.DSP_INSTALL_PATH)/DSPGAME.exe" ...($env.LAUNCH_ARGS | split row ' ') ...($save | split row ' ')
 }
