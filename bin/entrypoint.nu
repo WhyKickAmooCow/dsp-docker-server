@@ -125,11 +125,11 @@ def install_mods [mods] {
 
 
 def run_game [] {
-    # mkdir $"($env.DSP_INSTALL_PATH)/BepInEx/config"
+    mkdir $"($env.DSP_INSTALL_PATH)/BepInEx/config"
 
-    # # for file in (ls /config/) {
-    # #     open --raw $file.name | envsubst | save -f $"($env.DSP_INSTALL_PATH)/BepInEx/config/($file.name | path basename)"
-    # # }
+    for file in (ls /config/) {
+        open --raw $file.name | envsubst | save -f $"($env.DSP_INSTALL_PATH)/BepInEx/config/($file.name | path basename)"
+    }
 
     mut save = -load-latest
     if (ls /save | length)  == 0 {
