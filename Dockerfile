@@ -95,4 +95,4 @@ RUN mkdir /tmp/.X11-unix
 
 ENV DISPLAY=:0
 
-CMD [ "with-contenv", "nu" ]
+CMD [ "with-contenv", "/usr/bin/entrypoint.nu" ]
