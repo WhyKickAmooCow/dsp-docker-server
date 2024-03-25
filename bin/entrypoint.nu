@@ -10,7 +10,14 @@ let required_plugins = [
     "CommonAPI/DSPModSave"
 ]
 
-let bepinex_plugins = $required_plugins ++ (echo $env.ADDITIONAL_PLUGINS | split row ',')
+let bepinex_plugins = do {
+    let additional_plugins = do -i {$env.ADDITIONAL_PLUGINS}
+    if $additional_plugins != null {
+        $required_plugins ++ ($additional_plugins | split row ',')
+    } else {
+        $required_plugins
+    }
+}
 
 def safe_get [list, index: int, default: any = null] {
     if ($list | length) > $index {
@@ -31,8 +38,10 @@ def main [...args] {
                 install_mods $bepinex_plugins
             },
             _ => {
-                if ($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists) and (($args | length) > 0) {
-                    error make {msg: $"Unknown argument ($args.0)"}
+                if ($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists) {
+                    if (echo $args | length) > 0 {
+                        error make {msg: $"Unknown argument ($args.0)"}
+                    }
                 } else {
                     install_game (safe_get $args 0 "") (safe_get $args 1 "") (safe_get $args 2 "")
                     install_mods $bepinex_plugins
@@ -64,7 +73,7 @@ def install_game [username: string, password: string, code: string] {
     "1366540" | save -f $"($env.DSP_INSTALL_PATH)/steam_appid.txt"
 }
 
-def install_mods [mods: list<string>] {
+def install_mods [mods] {
     print "Installing BepInEx"
 
     rm -rf $"($env.DSP_INSTALL_PATH)/BepInEx"
@@ -116,11 +125,11 @@ def install_mods [mods: list<string>] {
 
 
 def run_game [] {
-    mkdir $"($env.DSP_INSTALL_PATH)/BepInEx/config"
+    # mkdir $"($env.DSP_INSTALL_PATH)/BepInEx/config"
 
-    for file in (ls /config/) {
-        open --raw $file.name | envsubst | save -f $"($env.DSP_INSTALL_PATH)/BepInEx/config/($file.name | path basename)"
-    }
+    # # for file in (ls /config/) {
+    # #     open --raw $file.name | envsubst | save -f $"($env.DSP_INSTALL_PATH)/BepInEx/config/($file.name | path basename)"
+    # # }
 
     mut save = -load-latest
     if (ls /save | length)  == 0 {
@@ -133,5 +142,5 @@ def run_game [] {
         $save = $"-newgame ($seed | str join) ($env.STAR_COUNT) ($env.RESOURCE_MUTLIPLIER)"
     }
 
-    xvfb-run wine $"($env.DSP_INSTALL_PATH)/DSPGAME.exe" ...($env.LAUNCH_ARGS | split row ' ') ...($save | split row ' ')
+    wine $"($env.DSP_INSTALL_PATH)/DSPGAME.exe" ...($env.LAUNCH_ARGS | split row ' ') ...($save | split row ' ')
 }
