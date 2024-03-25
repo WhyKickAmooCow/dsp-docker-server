@@ -72,20 +72,6 @@ RUN echo '/usr/bin/nu' >> /etc/shells \
     | xargs -I{} su -c 'register {}' dsp \
     && rm -rf /tmp/*
 
-WORKDIR /
-
-ARG S6_OVERLAY_VERSION=3.1.6.2
-
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
-ENTRYPOINT ["/init"]
-
-COPY ./services/ /etc/s6-overlay/s6-rc.d/
-
-WORKDIR /home/dsp
-
 USER dsp
 
 
@@ -95,4 +81,4 @@ RUN mkdir /tmp/.X11-unix
 
 ENV DISPLAY=:0
 
-CMD [ "with-contenv", "/usr/bin/entrypoint.nu" ]
+ENTRYPOINT [ "/usr/bin/entrypoint.nu" ]

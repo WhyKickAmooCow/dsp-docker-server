@@ -142,5 +142,6 @@ def run_game [] {
         $save = $"-newgame ($seed | str join) ($env.STAR_COUNT) ($env.RESOURCE_MUTLIPLIER)"
     }
 
+    bash -c "weston --xwayland -B headless &"
     wine $"($env.DSP_INSTALL_PATH)/DSPGAME.exe" ...($env.LAUNCH_ARGS | split row ' ') ...($save | split row ' ')
 }
