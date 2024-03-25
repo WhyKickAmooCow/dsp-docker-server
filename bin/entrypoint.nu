@@ -30,8 +30,8 @@ def main [...args] {
             "update_mods" => {
                 install_mods $bepinex_plugins
             },
-            _ if ($args | length) > 0 => {
-                if (($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists)) {
+            _ => {
+                if ($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists) and (($args | length) > 0) {
                     error make {msg: $"Unknown argument ($args.0)"}
                 } else {
                     install_game (safe_get $args 0 "") (safe_get $args 1 "") (safe_get $args 2 "")
@@ -50,7 +50,7 @@ def main [...args] {
 
 def install_game [username: string, password: string, code: string] {
     if ($username | is-empty) {
-        error make{msg: "You are required to provide a steam login that owns Dyson Sphere Program"}
+        error make {msg: "You are required to provide a steam login that owns Dyson Sphere Program"}
     }
 
     steamcmd +force_install_dir $env.DSP_INSTALL_PATH +login $username $password $code +@sSteamCmdForcePlatformType windows +app_update 1366540 validate +quit
