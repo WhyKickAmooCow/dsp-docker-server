@@ -46,6 +46,8 @@ ENV AUTO_PAUSE=true
 ENV STAR_COUNT=64
 ENV RESOURCE_MUTLIPLIER=1.0
 
+ENV REQUIRED_PLUGINS=nebula-NebulaMultiplayerMod,nebula-NebulaMultiplayerModApi,PhantomGamers-IlLine,CommonAPI-CommonAPI,starfi5h-BulletTime,xiaoye97-LDBTool,CommonAPI-DSPModSave
+
 COPY config/ /config/
 RUN mkdir -p "/home/dsp/.wine/drive_c/users/dsp/Documents/Dyson Sphere Program"
 RUN ln -s /save "/home/dsp/.wine/drive_c/users/dsp/Documents/Dyson Sphere Program/Save"
