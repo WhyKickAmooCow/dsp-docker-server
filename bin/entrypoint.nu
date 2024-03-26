@@ -64,7 +64,7 @@ def install_game [username: string, password: string, code: string] {
         error make {msg: "You are required to provide a steam login that owns Dyson Sphere Program"}
     }
 
-    steamcmd +force_install_dir $env.DSP_INSTALL_PATH +login $username $password $code +@sSteamCmdForcePlatformType windows +app_update 1366540 ...(get_or_default $env LAUNCH_ARGS [] | split row ' ') validate +quit
+    steamcmd +force_install_dir $env.DSP_INSTALL_PATH +login $username $password $code +@sSteamCmdForcePlatformType windows +app_update 1366540 ...(get_or_default $env ADDITIONAL_INSTALL_ARGS "" | split row ' ') validate +quit
 
     rm -f $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_api64.dll"
     http get https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/4247811307/artifacts/raw/release/steam_api64.dll | save $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_api64.dll"
