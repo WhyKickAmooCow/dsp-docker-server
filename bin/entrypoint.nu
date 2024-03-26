@@ -65,7 +65,7 @@ def install_game [username: string, password: string, code: string] {
     steamcmd +force_install_dir $env.DSP_INSTALL_PATH +login $username $password $code +@sSteamCmdForcePlatformType windows +app_update 1366540 validate +quit
 
     rm -f $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_api64.dll"
-    curl -s -L "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/4247811307/artifacts/raw/release/steam_api64.dll" -o $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_api64.dll"
+    http get "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/4247811307/artifacts/raw/release/steam_api64.dll" | save $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_api64.dll"
 
     mkdir $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_settings"
     touch $"($env.DSP_INSTALL_PATH)/DSPGAME_Data/Plugins/steam_settings/disable_networking.txt"
@@ -82,7 +82,7 @@ def install_mods [mods] {
     let latest_json = (http get https://api.github.com/repos/BepInEx/BepInEx/releases/latest)
     let asset = $latest_json.assets | where name =~ ^BepInEx_x64 | first
 
-    curl -s -OL $asset.browser_download_url
+    http get $asset.browser_download_url | save $asset.name
     unzip -qq -o $asset.name
     rm $asset.name
 
@@ -102,7 +102,7 @@ def install_mods [mods] {
         
         print $"Downloading ($asset.name):($asset.latest.version_number) from ($asset.latest.download_url)"
 
-        curl -s -L $asset.latest.download_url -o $"($asset.name).zip"
+        http get $asset.latest.download_url | save $"($asset.name).zip"
         mkdir $asset.name
         unzip -qq -o $"($asset.name).zip" -d $asset.name
         rm -rf $"($asset.name).zip"
