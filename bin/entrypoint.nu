@@ -51,7 +51,7 @@ def main [...args] {
             }
         }
     } catch { |e|
-        print -e $"Error: ($e)"
+        print -e $"Error: ($e.msg)"
         return
     }
 
