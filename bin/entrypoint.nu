@@ -30,7 +30,7 @@ def get_or_default [input, key, default: any = null] {
 }
 
 def main [...args] {
-    try {
+    # try {
         match ($args.0?) {
             "update" => {
                 install_game (get_or_default $args 1 "") (get_or_default $args 2 "") (get_or_default $args 3 "")
@@ -50,10 +50,10 @@ def main [...args] {
                 }
             }
         }
-    } catch { |e|
-        print -e $"Error: ($e.msg)"
-        return
-    }
+    # } catch { |e|
+    #     print -e $"Error: ($e.msg)"
+    #     return
+    # }
 
 
     run_game
@@ -81,7 +81,7 @@ def install_mods [mods] {
 
     cd $env.DSP_INSTALL_PATH
     let latest_json = http get https://api.github.com/repos/BepInEx/BepInEx/releases/latest
-    let asset = $latest_json.assets | where name =~ ^BepInEx_x64 | first
+    let asset = $latest_json.assets | where name =~ ^BepInEx_win_x64 | first
 
     http get $asset.browser_download_url | save $asset.name
     unzip -qq -o $asset.name
@@ -130,19 +130,29 @@ def install_mods [mods] {
 def run_game [] {
     mkdir $"($env.DSP_INSTALL_PATH)/BepInEx/config"
 
-    for file in (ls /config/) {
-        open --raw $file.name | envsubst | save -f $"($env.DSP_INSTALL_PATH)/BepInEx/config/($file.name | path basename)"
+    if ($env.GENERATE_CONFIG? | into bool) {
+        for file in (ls /config/) {
+            open --raw $file.name | envsubst | save -f $"($env.DSP_INSTALL_PATH)/BepInEx/config/($file.name | path basename)"
+        }
     }
 
     mut save = -load-latest
-    if (ls /save | length)  == 0 {
-        mut seed = []
+    if $env.SAVE? != null {
+        $save = $env.SAVE
+    } else {
+        if (ls /save | length) == 0 {
+            if $env.SEED? == null {
+                mut seed = []
 
-        for i in 0..8 {
-            $seed ++= (random int 0..9)
+                for i in 0..8 {
+                    $seed ++= (random int 0..9)
+                }
+                
+                $env.SEED = $seed
+            }
+
+            $save = $"-newgame ($env.SEED | str join) ($env.STAR_COUNT) ($env.RESOURCE_MUTLIPLIER)"
         }
-
-        $save = $"-newgame ($seed | str join) ($env.STAR_COUNT) ($env.RESOURCE_MUTLIPLIER)"
     }
 
     bash -c "weston --xwayland -B headless &"

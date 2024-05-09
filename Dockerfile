@@ -22,6 +22,8 @@ RUN winetricks -q dotnet48
 
 ENV LAUNCH_ARGS="-batchmode -nographics -server"
 
+ENV GENERATE_CONFIG=true
+
 ENV DSP_INSTALL_PATH=/game
 
 ### Server config env vars
