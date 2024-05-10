@@ -20,36 +20,6 @@ ENV WINEDEBUG=fixme-all,err-d3d_shader
 
 RUN winetricks -q dotnet48
 
-ENV LAUNCH_ARGS="-batchmode -nographics -server"
-
-ENV GENERATE_CONFIG=true
-
-ENV DSP_INSTALL_PATH=/game
-
-### Server config env vars
-
-## BulletTime
-# Minimum UPS in client of multiplayer game
-ENV MIN_UPS=50
-
-## Nebula Multiplayer
-# ENV SERVER_NAME
-# ENV SERVER_PASSWORD
-ENV PORT=8469
-ENV ENABLE_NGROK=false
-# ENV NGROK_TOKEN
-#ENV NGROK_REGION
-ENV SYNC_UPS=true
-ENV SYNC_SOIL=false
-ENV REMOTE_ACCESS=false
-# ENV REMOTE_ACCESS_PASSWORD
-ENV AUTO_PAUSE=true
-
-ENV STAR_COUNT=64
-ENV RESOURCE_MUTLIPLIER=1.0
-
-ENV REQUIRED_PLUGINS=nebula-NebulaMultiplayerMod,nebula-NebulaMultiplayerModApi,PhantomGamers-IlLine,CommonAPI-CommonAPI,starfi5h-BulletTime,xiaoye97-LDBTool,CommonAPI-DSPModSave
-
 COPY config/ /config/
 RUN mkdir -p "/home/dsp/.wine/drive_c/users/dsp/Documents/Dyson Sphere Program"
 RUN ln -s /save "/home/dsp/.wine/drive_c/users/dsp/Documents/Dyson Sphere Program/Save"
@@ -78,6 +48,56 @@ RUN echo '/usr/bin/nu' >> /etc/shells \
 
 USER dsp
 
+#
+# Server config env vars
+#
+
+ENV LAUNCH_ARGS="-batchmode -nographics -server"
+
+ENV GENERATE_CONFIG=true
+
+ENV DSP_INSTALL_PATH=/game
+
+## BulletTime
+# Minimum UPS in client of multiplayer game
+ENV MIN_UPS=50
+
+## Nebula Multiplayer
+# ENV SERVER_NAME
+# ENV SERVER_PASSWORD
+ENV PORT=8469
+ENV ENABLE_NGROK=false
+# ENV NGROK_TOKEN
+#ENV NGROK_REGION
+ENV SYNC_UPS=true
+ENV SYNC_SOIL=false
+ENV REMOTE_ACCESS=false
+# ENV REMOTE_ACCESS_PASSWORD
+ENV AUTO_PAUSE=true
+
+ENV SEED=-1
+ENV STAR_COUNT=-1
+ENV RESOURCE_MUTLIPLIER=-1
+
+ENV PEACE_MODE=false
+ENV SANDBOX_MODE=false
+
+ENV COMBAT_AGGRESSIVENESS=1
+ENV COMBAT_INITIAL_LEVEL=0
+ENV COMBAT_INITIAL_GROWTH=1
+ENV COMBAT_INITIAL_COLONIZE=1
+ENV COMBAT_MAX_DENSITY=1
+ENV COMBAT_GROWTH_SPEED_FACTOR=1
+ENV COMBAT_POWER_THREAT_FACTOR=1
+ENV COMBAT_BATTLE_THREAT_FACTOR=1
+ENV COMBAT_BATTLE_EXP_FACTOR=1
+
+ENV REQUIRED_PLUGINS=nebula-NebulaMultiplayerMod,nebula-NebulaMultiplayerModApi,PhantomGamers-IlLine,CommonAPI-CommonAPI,starfi5h-BulletTime,xiaoye97-LDBTool,CommonAPI-DSPModSave
+
+
+#
+# Weston runtime setup
+#
 
 ENV XDG_RUNTIME_DIR=/tmp/dsp
 RUN mkdir /tmp/dsp && chmod 0700 /tmp/dsp

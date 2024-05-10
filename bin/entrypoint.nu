@@ -137,22 +137,12 @@ def run_game [] {
     }
 
     mut save = -load-latest
+    if (ls /save | length) == 0 {
+        $save = "-newgame-cfg"
+    }
+
     if $env.SAVE? != null {
         $save = $env.SAVE
-    } else {
-        if (ls /save | length) == 0 {
-            if $env.SEED? == null {
-                mut seed = []
-
-                for i in 0..8 {
-                    $seed ++= (random int 0..9)
-                }
-                
-                $env.SEED = $seed
-            }
-
-            $save = $"-newgame ($env.SEED | str join) ($env.STAR_COUNT) ($env.RESOURCE_MUTLIPLIER)"
-        }
     }
 
     bash -c "weston --xwayland -B headless &"
