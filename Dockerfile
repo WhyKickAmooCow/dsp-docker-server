@@ -29,21 +29,22 @@ COPY ["appdata/", "/home/dsp/.wine/drive_c/users/dsp/Documents/Dyson Sphere Prog
 USER root
 COPY --chmod=777 bin/* /usr/bin/
 
-ARG NUSHELL_VER="0.91.0"
-RUN echo '/usr/bin/nu' >> /etc/shells \
-    && usermod --shell /usr/bin/nu dsp \
-    && mkdir -p /home/dsp/.config/nushell/ \
+ARG NUSHELL_VER="0.97.1"
+RUN mkdir -p /home/dsp/.config/nushell/ \
     && wget -q https://raw.githubusercontent.com/nushell/nushell/${NUSHELL_VER}/crates/nu-utils/src/sample_config/default_config.nu -O /home/dsp/.config/nushell/config.nu \
     && wget -q https://raw.githubusercontent.com/nushell/nushell/${NUSHELL_VER}/crates/nu-utils/src/sample_config/default_env.nu -O /home/dsp/.config/nushell/env.nu \
     && cd /tmp \
-    && wget -q https://github.com/nushell/nushell/releases/download/${NUSHELL_VER}/nu-${NUSHELL_VER}-x86_64-linux-gnu-full.tar.gz \
+    && wget -q https://github.com/nushell/nushell/releases/download/${NUSHELL_VER}/nu-${NUSHELL_VER}-x86_64-unknown-linux-gnu.tar.gz \
     && tar -xzf nu* \
-    && cd nu*-gnu-full \
+    && cd nu*-linux-gnu \
     && mv nu* /usr/bin \
-    && chmod +x /usr/bin/nu \
-    && chown -R dsp:dsp /home/dsp/.config/nushell \
+    && chmod +x /usr/bin/nu
+
+RUN chown -R dsp:dsp /home/dsp/.config/nushell \
+    && echo '/usr/bin/nu' >> /etc/shells \
+    && usermod --shell /usr/bin/nu dsp \
     && ls /usr/bin/nu_plugin* \
-    | xargs -I{} su -c 'register {}' dsp \
+    | xargs -I{} su -c 'plugin add {}' dsp \
     && rm -rf /tmp/*
 
 USER dsp

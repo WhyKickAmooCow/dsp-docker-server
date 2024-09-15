@@ -30,31 +30,24 @@ def get_or_default [input, key, default: any = null] {
 }
 
 def main [...args] {
-    # try {
-        match ($args.0?) {
-            "update" => {
-                install_game (get_or_default $args 1 "") (get_or_default $args 2 "") (get_or_default $args 3 "")
-                install_mods $bepinex_plugins
-            },
-            "update_mods" => {
-                install_mods $bepinex_plugins
-            },
-            _ => {
-                if ($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists) {
-                    if (echo $args | length) > 0 {
-                        error make {msg: $"Unknown argument ($args.0)"}
-                    }
-                } else {
-                    install_game (get_or_default $args 0 "") (get_or_default $args 1 "") (get_or_default $args 2 "")
-                    install_mods $bepinex_plugins
+    match ($args.0?) {
+        "update" => {
+            install_game (get_or_default $args 1 "" | into string) (get_or_default $args 2 "" | into string) (get_or_default $args 3 "" | into string)
+            install_mods $bepinex_plugins
+        },
+        "update_mods" => {
+            install_mods $bepinex_plugins
+        },
+        _ => {
+            if ($"($env.DSP_INSTALL_PATH)/DSPGAME.exe" | path exists) {
+                if (echo $args | length) > 0 {
+                    error make {msg: $"Unknown argument ($args.0)"}
                 }
+            } else {
+                main update $args.0? $args.1? $args.2?
             }
         }
-    # } catch { |e|
-    #     print -e $"Error: ($e.msg)"
-    #     return
-    # }
-
+    }
 
     run_game
 }
